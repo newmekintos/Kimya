@@ -221,15 +221,30 @@ function initializeFloatingMenu() {
 
 // Quiz'i başlat
 function initializeQuiz() {
+    console.log('initializeQuiz called');
+    console.log('Total questions:', quizQuestions ? quizQuestions.length : 'undefined');
+    
     currentQuestionIndex = 0;
     score = 0;
     answeredQuestions = [];
     
-    document.getElementById('quizResults').classList.add('hidden');
-    document.getElementById('quizContainer').innerHTML = '';
-    document.getElementById('totalQuestions').textContent = quizQuestions.length;
-    document.getElementById('currentQuestion').textContent = '0';
-    document.getElementById('progressBar').style.width = '0%';
+    const resultsEl = document.getElementById('quizResults');
+    const containerEl = document.getElementById('quizContainer');
+    const totalEl = document.getElementById('totalQuestions');
+    const currentEl = document.getElementById('currentQuestion');
+    const progressEl = document.getElementById('progressBar');
+    
+    if (!containerEl) {
+        console.error('Quiz container not found!');
+        return;
+    }
+    
+    if (resultsEl) resultsEl.classList.add('hidden');
+    containerEl.innerHTML = '';
+    containerEl.classList.remove('hidden');
+    if (totalEl) totalEl.textContent = quizQuestions.length;
+    if (currentEl) currentEl.textContent = '0';
+    if (progressEl) progressEl.style.width = '0%';
     
     showQuestion();
 }
@@ -289,8 +304,9 @@ function showQuestion() {
     `;
 }
 
-// Cevap seç
-function selectAnswer(selectedIndex) {
+// Cevap seç - Global scope'ta olmalı
+window.selectAnswer = function(selectedIndex) {
+    console.log('selectAnswer called with index:', selectedIndex);
     const question = quizQuestions[currentQuestionIndex];
     const options = document.querySelectorAll('.quiz-option');
     
@@ -385,8 +401,8 @@ function showFeedbackMessage(message, type) {
     }, 3000);
 }
 
-// Sonraki soru
-function nextQuestion() {
+// Sonraki soru - Global scope'ta olmalı
+window.nextQuestion = function() {
     currentQuestionIndex++;
     showQuestion();
 }
@@ -420,8 +436,8 @@ function showResults() {
     }
 }
 
-// Quiz'i yeniden başlat
-function restartQuiz() {
+// Quiz'i yeniden başlat - Global scope'ta olmalı
+window.restartQuiz = function() {
     document.getElementById('quizContainer').classList.remove('hidden');
     document.getElementById('quizResults').classList.add('hidden');
     initializeQuiz();

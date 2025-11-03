@@ -128,14 +128,17 @@
 
         .quiz-option {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+            cursor: pointer !important;
             background: var(--bg-primary);
             color: var(--text-primary);
+            position: relative;
+            z-index: 1;
         }
 
         .quiz-option:hover {
-            transform: translateX(8px);
+            transform: translateX(8px) scale(1.02);
             box-shadow: var(--shadow-lg);
+            border-color: #667eea !important;
         }
         
         [data-theme="dark"] .quiz-option {
@@ -145,6 +148,7 @@
         
         [data-theme="dark"] .quiz-option:hover {
             background: #141414 !important;
+            border-color: #4a4a4a !important;
         }
 
         .quiz-option.correct {
