@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kimya Sınav Çalışma - 12. Sınıf Elektrokimya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-tertiary: #6b7280;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 10px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 12px 20px -4px rgb(0 0 0 / 0.15);
+            --shadow-xl: 0 24px 40px -8px rgb(0 0 0 / 0.2);
+            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            --gradient-secondary: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #000000;
+            --bg-secondary: #000000;
+            --bg-tertiary: #000000;
+            --text-primary: #e5e5e5;
+            --text-secondary: #a3a3a3;
+            --text-tertiary: #737373;
+            --border-color: #1f1f1f;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.8);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.8);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.8);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.8);
+        }
+
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        [data-theme="dark"] body {
+            background-color: #000000 !important;
+        }
+        
+        [data-theme="dark"] * {
+            background-color: transparent !important;
+        }
+        
+        [data-theme="dark"] body,
+        [data-theme="dark"] main,
+        [data-theme="dark"] header,
+        [data-theme="dark"] footer,
+        [data-theme="dark"] div,
+        [data-theme="dark"] section {
+            background-color: #000000 !important;
+        }
+
+        .gradient-bg {
+            background: var(--gradient-primary);
+        }
+        
+        [data-theme="dark"] .gradient-bg {
+            background: #000000 !important;
+        }
+
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .topic-card {
+            background: var(--bg-primary);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .topic-card:hover::before {
+            opacity: 0;
+        }
+        
+        [data-theme="dark"] .topic-card {
+            background: #000000 !important;
+            border-color: #1f1f1f !important;
+        }
+
+        @media (min-width: 768px) {
+            .topic-card {
+                padding: 28px;
+                margin-bottom: 20px;
+                border-radius: 24px;
+            }
+        }
+
+        .quiz-option {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .quiz-option:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        [data-theme="dark"] .quiz-option {
+            background: #0a0a0a !important;
+            border-color: #2d2d2d !important;
+        }
+        
+        [data-theme="dark"] .quiz-option:hover {
+            background: #141414 !important;
+        }
+
+        .quiz-option.correct {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+            border-color: #10b981 !important;
+        }
+
+        [data-theme="dark"] .quiz-option.correct {
+            background: #0a0a0a !important;
+            border-color: #2d2d2d !important;
+        }
+
+        .quiz-option.incorrect {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+            border-color: #ef4444 !important;
+        }
+
+        [data-theme="dark"] .quiz-option.incorrect {
+            background: #0a0a0a !important;
+            border-color: #2d2d2d !important;
+        }
+
+        .formula {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            display: inline-block;
+            margin: 8px 0;
+            border: 2px solid var(--border-color);
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 24px;
+            border-radius: 16px;
+            margin: 20px 0;
+            border-left: 6px solid #f59e0b;
+            box-shadow: var(--shadow-md);
+            color: #78350f;
+        }
+
+        [data-theme="dark"] .example-box {
+            background: #000000 !important;
+            border-left-color: #333333 !important;
+            color: #d4d4d4;
+        }
+
+        /* Dark mode - EVERYTHING BLACK! */
+        [data-theme="dark"] .bg-green-50,
+        [data-theme="dark"] .bg-green-100,
+        [data-theme="dark"] .bg-green-200,
+        [data-theme="dark"] .bg-green-950,
+        [data-theme="dark"] .bg-red-50,
+        [data-theme="dark"] .bg-red-100,
+        [data-theme="dark"] .bg-red-200,
+        [data-theme="dark"] .bg-red-950,
+        [data-theme="dark"] .bg-blue-50,
+        [data-theme="dark"] .bg-blue-100,
+        [data-theme="dark"] .bg-blue-200,
+        [data-theme="dark"] .bg-blue-950,
+        [data-theme="dark"] .bg-yellow-50,
+        [data-theme="dark"] .bg-yellow-100,
+        [data-theme="dark"] .bg-yellow-200,
+        [data-theme="dark"] .bg-yellow-950,
+        [data-theme="dark"] .bg-orange-50,
+        [data-theme="dark"] .bg-orange-100,
+        [data-theme="dark"] .bg-orange-200,
+        [data-theme="dark"] .bg-orange-950,
+        [data-theme="dark"] .bg-purple-50,
+        [data-theme="dark"] .bg-purple-100,
+        [data-theme="dark"] .bg-purple-200,
+        [data-theme="dark"] .bg-purple-950,
+        [data-theme="dark"] .bg-gray-50,
+        [data-theme="dark"] .bg-gray-100,
+        [data-theme="dark"] .bg-gray-200,
+        [data-theme="dark"] .bg-gray-800,
+        [data-theme="dark"] .bg-white,
+        [data-theme="dark"] .bg-slate-800,
+        [data-theme="dark"] .bg-slate-900 {
+            background-color: #000000 !important;
+        }
+
+        /* Dark mode - ALL BORDERS DARK GRAY */
+        [data-theme="dark"] .border-red-300,
+        [data-theme="dark"] .border-red-500,
+        [data-theme="dark"] .border-red-800,
+        [data-theme="dark"] .border-blue-300,
+        [data-theme="dark"] .border-blue-800,
+        [data-theme="dark"] .border-green-300,
+        [data-theme="dark"] .border-green-500,
+        [data-theme="dark"] .border-green-800,
+        [data-theme="dark"] .border-orange-300,
+        [data-theme="dark"] .border-orange-800,
+        [data-theme="dark"] .border-yellow-500,
+        [data-theme="dark"] .border-yellow-700,
+        [data-theme="dark"] .border-yellow-800,
+        [data-theme="dark"] .border-purple-300,
+        [data-theme="dark"] .border-purple-700,
+        [data-theme="dark"] .border-purple-800,
+        [data-theme="dark"] .border-green-200,
+        [data-theme="dark"] .border-red-200,
+        [data-theme="dark"] .border-blue-200,
+        [data-theme="dark"] .border-yellow-200,
+        [data-theme="dark"] .border-yellow-400 {
+            border-color: #2d2d2d !important;
+        }
+
+        /* Dark mode text colors */
+        [data-theme="dark"] .text-gray-800,
+        [data-theme="dark"] .text-gray-700 {
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme="dark"] .text-gray-600 {
+            color: var(--text-secondary) !important;
+        }
+
+        /* Dark mode için table */
+        [data-theme="dark"] table {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] thead {
+            background: var(--bg-tertiary) !important;
+        }
+
+        [data-theme="dark"] tbody tr {
+            border-color: var(--border-color) !important;
+        }
+
+        /* Dark mode için bg-white override */
+        [data-theme="dark"] .bg-white.bg-opacity-10 {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Dark mode - ALL TEXT GRAYSCALE */
+        [data-theme="dark"] .text-purple-600,
+        [data-theme="dark"] .text-blue-800,
+        [data-theme="dark"] .text-blue-700,
+        [data-theme="dark"] .text-blue-400,
+        [data-theme="dark"] .text-green-600,
+        [data-theme="dark"] .text-green-700,
+        [data-theme="dark"] .text-green-400,
+        [data-theme="dark"] .text-green-800,
+        [data-theme="dark"] .text-green-900,
+        [data-theme="dark"] .text-red-700,
+        [data-theme="dark"] .text-red-400,
+        [data-theme="dark"] .text-orange-400,
+        [data-theme="dark"] .text-yellow-400,
+        [data-theme="dark"] .text-gray-100 {
+            color: #e5e5e5 !important;
+        }
+        
+        [data-theme="dark"] .text-green-300 {
+            color: #d4d4d4 !important;
+        }
+
+        /* Dark mode için bg-gray-200 */
+        [data-theme="dark"] .bg-gray-200 {
+            background-color: var(--bg-tertiary) !important;
+        }
+
+        .key-point {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin: 16px 0;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        [data-theme="dark"] .key-point {
+            background: #1a1a1a !important;
+            color: #d4d4d4 !important;
+            border: 1px solid #2d2d2d;
+        }
+
+        .tab-active {
+            background: var(--gradient-primary);
+            color: white !important;
+            box-shadow: var(--shadow-md);
+        }
+
+        .tab-btn {
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover:not(.tab-active) {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        sub { font-size: 0.7em; }
+        sup { font-size: 0.7em; }
+
+        .progress-bar {
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-toggle-btn-small {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-btn-small:hover {
+            background: var(--bg-secondary);
+            transform: scale(1.05);
+        }
+
+        .theme-toggle-btn-small:active {
+            transform: scale(0.95);
+        }
+
+        .theme-icon-light,
+        .theme-icon-dark {
+            position: absolute;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .theme-icon-light {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        .theme-icon-dark {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0);
+        }
+
+        [data-theme="dark"] .theme-icon-light {
+            opacity: 0;
+            transform: rotate(90deg) scale(0);
+        }
+
+        [data-theme="dark"] .theme-icon-dark {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        /* Floating Action Button */
+        .fab-menu {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+
+        .fab-button {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .fab-button:active {
+            transform: scale(0.95);
+        }
+
+        .fab-menu-list {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        
+        [data-theme="dark"] .fab-menu-list {
+            background: #000000 !important;
+        }
+
+        .fab-menu-list.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .fab-menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .fab-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .fab-menu-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .fab-menu-item.active {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+        }
+        
+        [data-theme="dark"] .fab-menu-item {
+            background: #000000 !important;
+        }
+        
+        [data-theme="dark"] .fab-menu-item:hover {
+            background: #0a0a0a !important;
+        }
+        
+        [data-theme="dark"] .fab-menu-item.active {
+            background: #0a0a0a !important;
+        }
+
+        [data-theme="dark"] .fab-button {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+        
+        [data-theme="dark"] .gradient-bg {
+            background: #000000 !important;
+        }
+
+        [data-theme="dark"] .fab-menu-list {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="dark"] .glass-card {
+            background: #000000 !important;
+            border: 1px solid #1f1f1f !important;
+        }
+        
+        .study-plan-card {
+            background: var(--gradient-primary);
+        }
+        
+        [data-theme="dark"] .study-plan-card {
+            background: #000000 !important;
+        }
+        
+        .study-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        [data-theme="dark"] .study-section {
+            background: #0a0a0a !important;
+            backdrop-filter: none !important;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 24px;
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 20px;
+            padding: 2px;
+            background: var(--gradient-primary);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        @media (min-width: 768px) {
+            .stat-card {
+                padding: 28px;
+                border-radius: 24px;
+            }
+        }
+        
+        [data-theme="dark"] .stat-card {
+            background: #000000 !important;
+            border-color: #1f1f1f !important;
+        }
+        
+        [data-theme="dark"] .stat-card:hover::after {
+            opacity: 0 !important;
+        }
+
+        @media (max-width: 768px) {
+            .topic-card {
+                padding: 20px;
+                margin-bottom: 16px;
+            }
+            
+            .example-box, .key-point {
+                padding: 16px;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #667eea;
+        }
+        
+        [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+            background: #333333;
+        }
+
+        /* Hide scrollbar for horizontal overflow */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header style="background: var(--bg-primary); border-bottom: 1px solid var(--border-color);" class="py-2">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">⚗️</span>
+                    <div>
+                        <h1 class="text-base md:text-lg font-bold" style="color: var(--text-primary);">Kimya Çalışma</h1>
+                        <p class="text-xs opacity-70" style="color: var(--text-secondary);">12. Sınıf Elektrokimya</p>
+                    </div>
+                </div>
+                <button id="themeToggle" class="theme-toggle-btn-small" title="Tema" aria-label="Tema">
+                    <i class="fas fa-sun theme-icon-light"></i>
+                    <i class="fas fa-moon theme-icon-dark"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-4 md:py-6">
+        <!-- Overview Tab -->
+        <div id="overview-content" class="tab-content fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+                <div class="stat-card card-hover">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="text-4xl">📚</div>
+                        <h3 class="text-xl md:text-2xl font-bold" style="color: var(--text-primary)">Sınav Konuları</h3>
+                    </div>
+                    <ul class="space-y-2 md:space-y-3" id="topicsList"></ul>
+                </div>
+                <div class="stat-card card-hover">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="text-4xl">📋</div>
+                        <h3 class="text-xl md:text-2xl font-bold" style="color: var(--text-primary)">Soru Dağılımı</h3>
+                    </div>
+                    <div id="questionDistribution"></div>
+                </div>
+            </div>
+
+            <div class="glass-card study-plan-card rounded-2xl p-6 md:p-8 shadow-xl mb-6">
+                <h3 class="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3" style="color: var(--text-primary);">
+                    <span>🎓</span> Çalışma Planı
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div class="study-section rounded-xl p-4 md:p-6">
+                        <h4 class="text-lg md:text-xl font-semibold mb-3" style="color: var(--text-primary);">✅ Yapılması Gerekenler:</h4>
+                        <ul class="space-y-2 text-sm md:text-base" style="color: var(--text-primary);">
+                            <li class="flex items-start gap-2"><span class="mt-1">✓</span><span>Tüm konuları sırayla oku</span></li>
+                            <li class="flex items-start gap-2"><span class="mt-1">✓</span><span>Örnekleri çöz ve anla</span></li>
+                            <li class="flex items-start gap-2"><span class="mt-1">✓</span><span>Formülleri ezberle</span></li>
+                            <li class="flex items-start gap-2"><span class="mt-1">✓</span><span>Sınav sorularını çöz</span></li>
+                            <li class="flex items-start gap-2"><span class="mt-1">✓</span><span>Yanlış yaptıklarını tekrarla</span></li>
+                        </ul>
+                    </div>
+                    <div class="study-section rounded-xl p-4 md:p-6">
+                        <h4 class="text-lg md:text-xl font-semibold mb-3" style="color: var(--text-primary);">⚠️ Önemli Noktalar:</h4>
+                        <ul class="space-y-2 text-sm md:text-base" style="color: var(--text-primary);">
+                            <li class="flex items-start gap-2"><span class="mt-1">•</span><span>Anot (-) ve Katot (+) karıştırma!</span></li>
+                            <li class="flex items-start gap-2"><span class="mt-1">•</span><span>Redoks denkleştirilmede ortam önemli</span></li>
+                            <li class="flex items-start gap-2"><span class="mt-1">•</span><span>E° değerleri ve işaretleri dikkatlice</span></li>
+                            <li class="flex items-start gap-2"><span class="mt-1">•</span><span>Aktiflik serisini iyi bil</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic Contents -->
+        <div id="topic1-content" class="tab-content hidden"></div>
+        <div id="topic2-content" class="tab-content hidden"></div>
+        <div id="topic3-content" class="tab-content hidden"></div>
+        <div id="topic4-content" class="tab-content hidden"></div>
+
+        <!-- Quiz Tab -->
+        <div id="quiz-content" class="tab-content hidden">
+            <div class="stat-card shadow-xl">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <h2 class="text-2xl md:text-3xl font-bold flex items-center gap-3" style="color: var(--text-primary)">
+                        <span>🎯</span> Sınav Soruları
+                    </h2>
+                    <div class="text-left sm:text-right">
+                        <div class="text-xs md:text-sm" style="color: var(--text-secondary)">İlerleme</div>
+                        <div class="text-xl md:text-2xl font-bold" style="color: #667eea;">
+                            <span id="currentQuestion">0</span> / <span id="totalQuestions">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <div class="w-full rounded-full h-3" style="background: var(--bg-tertiary);">
+                        <div class="progress-bar h-3 rounded-full" 
+                             style="background: var(--gradient-primary);"
+                             id="progressBar"></div>
+                    </div>
+                </div>
+
+                <div id="quizContainer"></div>
+
+                <div id="quizResults" class="hidden">
+                    <div class="text-center py-8">
+                        <div class="text-5xl md:text-6xl mb-4">🎉</div>
+                        <h3 class="text-2xl md:text-3xl font-bold mb-4" style="color: var(--text-primary)">Quiz Tamamlandı!</h3>
+                        <div class="text-4xl md:text-5xl font-bold mb-6" style="color: #667eea;">
+                            <span id="finalScore"></span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 max-w-md mx-auto">
+                            <div class="bg-green-50 dark:bg-green-900 dark:bg-opacity-20 p-4 rounded-lg">
+                                <p class="text-lg md:text-xl"><span class="font-semibold text-green-600">✓ Doğru:</span></p>
+                                <p class="text-2xl font-bold text-green-600" id="correctCount"></p>
+                            </div>
+                            <div class="bg-red-50 dark:bg-red-900 dark:bg-opacity-20 p-4 rounded-lg">
+                                <p class="text-lg md:text-xl"><span class="font-semibold text-red-600">✗ Yanlış:</span></p>
+                                <p class="text-2xl font-bold text-red-600" id="incorrectCount"></p>
+                            </div>
+                        </div>
+                        <button onclick="restartQuiz()" 
+                                class="text-gray-100 px-6 md:px-8 py-3 md:py-4 rounded-xl font-semibold text-base md:text-lg hover:shadow-xl transition-all"
+                                style="background: var(--gradient-primary);">
+                            🔄 Quizi Yeniden Başlat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="gradient-bg text-gray-100 py-4 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm md:text-base">💪 Başarılar! Sınavında başarılı olacaksın!</p>
+            <p class="text-xs opacity-75 mt-1">12. Sınıf Kimya - Elektrokimya</p>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button Menu -->
+    <div class="fab-menu">
+        <div class="fab-menu-list" id="fabMenuList">
+            <div class="fab-menu-item active" data-tab="overview">
+                <span>📊</span>
+                <span>Genel Bakış</span>
+            </div>
+            <div class="fab-menu-item" data-tab="topic1">
+                <span>🔋</span>
+                <span>Galvanik Piller</span>
+            </div>
+            <div class="fab-menu-item" data-tab="topic2">
+                <span>⚖️</span>
+                <span>Redoks Denkleştirme</span>
+            </div>
+            <div class="fab-menu-item" data-tab="topic3">
+                <span>⚡</span>
+                <span>Standart Potansiyel</span>
+            </div>
+            <div class="fab-menu-item" data-tab="topic4">
+                <span>📈</span>
+                <span>Aktiflik Serisi</span>
+            </div>
+            <div class="fab-menu-item" data-tab="quiz">
+                <span>🎯</span>
+                <span>Quiz</span>
+            </div>
+        </div>
+        <button class="fab-button" id="fabButton" aria-label="Menü">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
