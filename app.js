@@ -303,32 +303,86 @@ function selectAnswer(selectedIndex) {
     
     // Tüm seçenekleri devre dışı bırak
     options.forEach(option => {
-        option.style.cursor = 'default';
+        option.style.cursor = 'not-allowed';
+        option.style.opacity = '0.7';
         option.onclick = null;
     });
     
-    // Doğru ve yanlış cevapları işaretle
-    options.forEach((option, index) => {
-        if (index === question.correct) {
-            option.classList.add('correct');
+    // Seçilen cevaba anlık feedback
+    const selectedOption = document.getElementById(`option-${selectedIndex}`);
+    selectedOption.style.transform = 'scale(1.05)';
+    selectedOption.style.transition = 'all 0.3s ease';
+    
+    // Doğru mu yanlış mı kontrol et
+    const isCorrect = selectedIndex === question.correct;
+    
+    setTimeout(() => {
+        // Doğru ve yanlış cevapları işaretle
+        options.forEach((option, index) => {
+            if (index === question.correct) {
+                option.classList.add('correct');
+                option.style.opacity = '1';
+            }
+            if (index === selectedIndex && index !== question.correct) {
+                option.classList.add('incorrect');
+                option.style.opacity = '1';
+            }
+        });
+        
+        // Skoru güncelle
+        if (isCorrect) {
+            score++;
+            // Doğru cevap için ses efekti (opsiyonel)
+            showFeedbackMessage('✓ Doğru!', 'success');
+        } else {
+            showFeedbackMessage('✗ Yanlış', 'error');
         }
-        if (index === selectedIndex && index !== question.correct) {
-            option.classList.add('incorrect');
-        }
-    });
+        
+        // Açıklamayı göster
+        setTimeout(() => {
+            const explanationDiv = document.getElementById('explanation');
+            explanationDiv.querySelector('p').textContent = question.explanation;
+            explanationDiv.classList.remove('hidden');
+            explanationDiv.style.animation = 'fadeIn 0.5s ease';
+            
+            // Sonraki butonu göster
+            document.getElementById('nextBtn').classList.remove('hidden');
+            document.getElementById('nextBtn').style.animation = 'fadeIn 0.5s ease';
+            
+            // Otomatik sonraki soruya geç (5 saniye sonra)
+            setTimeout(() => {
+                if (currentQuestionIndex < quizQuestions.length - 1) {
+                    nextQuestion();
+                }
+            }, 5000);
+        }, 300);
+    }, 300);
+}
+
+// Feedback mesajı göster
+function showFeedbackMessage(message, type) {
+    const feedbackDiv = document.createElement('div');
+    feedbackDiv.className = `feedback-message ${type}`;
+    feedbackDiv.textContent = message;
+    feedbackDiv.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 18px;
+        z-index: 9999;
+        animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+        ${type === 'success' ? 'background: #10b981; color: white;' : 'background: #ef4444; color: white;'}
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    `;
     
-    // Skoru güncelle
-    if (selectedIndex === question.correct) {
-        score++;
-    }
+    document.body.appendChild(feedbackDiv);
     
-    // Açıklamayı göster
-    const explanationDiv = document.getElementById('explanation');
-    explanationDiv.querySelector('p').textContent = question.explanation;
-    explanationDiv.classList.remove('hidden');
-    
-    // Sonraki butonu göster
-    document.getElementById('nextBtn').classList.remove('hidden');
+    setTimeout(() => {
+        feedbackDiv.remove();
+    }, 3000);
 }
 
 // Sonraki soru
